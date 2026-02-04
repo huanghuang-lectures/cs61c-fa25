@@ -25,16 +25,6 @@ argmax:
     sw s0, 4(sp)
     sw s1, 8(sp)
 
-    # Initialize variables
-    mv s0, a0          # s0 = array pointer (current position)
-    mv s1, a1          # s1 = array length (counter)
-    li t0, 0           # s2 = max index (init to 0)
-    lw t1, 0(s0)       # t1 = max value (init to array[0])
-    
-    # Move to next element
-    addi s0, s0, 4
-    addi s1, s1, -1
-
 loop_start:
     # Initialize variables
     mv s0, a0          # s0 = array pointer (current position)
