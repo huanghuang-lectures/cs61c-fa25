@@ -29,12 +29,12 @@ read_matrix:
     # Prologue
     addi sp, sp, -28
     sw ra, 0(sp)
-    sw s0, 4(sp)   # Store the pointer to string representing the filename.
-    sw s1, 8(sp)   # Store the pointer to the number of rows.
-    sw s2, 12(sp)  # Store the pointer to the number of columns.
-    sw s3, 16(sp)  # Store the file descriptor of the file.
-    sw s4, 20(sp)  # Store the matrix size in bytes (row * column * 4).
-    sw s5, 24(sp)  # Store the pointer to the pointer to the matrix in memory.
+    sw s0, 4(sp)   # The pointer to string representing the filename.
+    sw s1, 8(sp)   # The pointer to the number of rows.
+    sw s2, 12(sp)  # The pointer to the number of columns.
+    sw s3, 16(sp)  # The file descriptor of the file.
+    sw s4, 20(sp)  # The matrix size in bytes (row * column * 4).
+    sw s5, 24(sp)  # The pointer to the pointer to the matrix in memory.
 
     mv s0, a0
     mv s1, a1
