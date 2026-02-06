@@ -58,32 +58,30 @@ matmul:
     mv s6, a6
 
 # Outer loop should iterate rows over m0.
-# i = 0; i < s1; i++ 
+# i = 0; i < s1; i++
 # address = s0 + i * a2 * 4
 outer_loop_start:
-    li s7, 0    # Init index i = 0
-
+	li s7, 0    # Init outer loop index i = 0
 outer_loop_continue:
     beq s7, s1, outer_loop_end  # Check if i < s1
-
-    # Calculate address of m0[i]
-    # &m0[i] = &m0[0] + i * m0.width * 4
-    # t0 = s0 + s7 * s2 * 4
-    mul t0, s7, s2
-    slli t0, t0, 4
-    add t0, s0, t0
 
 # Inner loop should iterate columns over m1.
 # j = 0; j < s5; j++
 # address = s3 + j * 1 * 4
 inner_loop_start:
-    li s8, 0    # Init index j = 0
-
+    li s8, 0    # Init inner loop index j = 0
 inner_loop_continue:
     beq s8, s5, inner_loop_end  # Check if j < s5
 
+    # Calculate address of m0[i] (needs to be recalculated each iteration)
+    # &m0[i][0] = &m0[0] + i * m0.width * 4
+    # t0 = s0 + s7 * s2 * 4
+    mul t0, s7, s2
+    slli t0, t0, 2
+    add t0, s0, t0
+
     # Calculate address of m1[j]
-    # &m1[j] = &m1[0] + j * 1 * 4
+    # &m1[0][j] = &m1[0] + j * 1 * 4
     # t1 = s3 + s8 * 1 * 4
     slli t1, s8, 2
     add t1, s3, t1
