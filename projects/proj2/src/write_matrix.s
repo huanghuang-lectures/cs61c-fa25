@@ -63,7 +63,7 @@ write_dimension:
     mv a0, s4
     mv a1, sp
     li a2, 1
-    li a3, 3
+    li a3, 4
     jal ra, fwrite
     addi sp, sp, 4
     li t0, 1
@@ -76,7 +76,7 @@ write_dimension:
     mv a0, s4
     mv a1, sp
     li a2, 1
-    li a3, 3
+    li a3, 4
     jal ra, fwrite
     addi sp, sp, 4
     li t0, 1
