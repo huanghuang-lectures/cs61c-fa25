@@ -44,7 +44,7 @@ classify:
     # Save arguments
     mv s0, a0   # argc
     mv s1, a1   # argv
-    mv s2, a2   # slient mode
+    mv s2, a2   # silent mode
 
 # Read three matrices m0, m1, and input from files.
 read_matrices:
@@ -82,7 +82,7 @@ compute:
     mul t0, t0, t1
     slli a0, t0, 2
     jal ra, malloc
-    beq a0, zero, exit_malloc_error
+    beq a0, zero, exit_malloc_error_h
     mv s6, a0
 
     # Compute h = matmul(m0, input)
@@ -108,7 +108,7 @@ compute:
     mul t0, t0, t1
     slli a0, t0, 2
     jal ra, malloc
-    beq a0, zero, exit_malloc_error
+    beq a0, zero, exit_malloc_error_o
     mv s7, a0
 
     # Compute o = matmul(m1, h)
@@ -141,7 +141,7 @@ compute:
 print_argmax:
     # If enabled, print argmax(o) and newline
     li t0, 1
-    beq s2, t0, free_space  # skip to end when slient mode.
+    beq s2, t0, free_space  # skip to end when silent mode
 
     # Print out argmax(o).
     mv a0, s8
@@ -189,11 +189,31 @@ free_space:
     lw s8, 36(sp)
     addi sp, sp, 40
 
-    mv a0, t0   # 返回值 = classification
+    mv a0, t0   # return value = classification
     jr ra
 
 
-exit_malloc_error:
+# malloc for h failed: free m0, m1, input before exit
+exit_malloc_error_h:
+    mv a0, s3
+    jal ra, free
+    mv a0, s4
+    jal ra, free
+    mv a0, s5
+    jal ra, free
+    li a0, 26
+    j cleanup_and_exit
+
+# malloc for o failed: free m0, m1, input, h before exit
+exit_malloc_error_o:
+    mv a0, s3
+    jal ra, free
+    mv a0, s4
+    jal ra, free
+    mv a0, s5
+    jal ra, free
+    mv a0, s6
+    jal ra, free
     li a0, 26
     j cleanup_and_exit
 
