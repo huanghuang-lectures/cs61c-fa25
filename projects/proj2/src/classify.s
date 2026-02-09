@@ -46,7 +46,7 @@ classify:
     mv s1, a1   # argv
     mv s2, a2   # slient mode
 
-# Read three matrices m0, m1, and input from files. 
+# Read three matrices m0, m1, and input from files.
 read_matrices:
     # Store all dimensions on stack.
     addi sp, sp, -24
@@ -73,9 +73,9 @@ read_matrices:
     mv s5, a0
 
 compute:
-    # The matmul function takes in two integer matrices A (dimension n × m) 
+    # The matmul function takes in two integer matrices A (dimension n × m)
     # and B (dimension m × k) and outputs an integer matrix C (dimension n × k).
-    # 
+    #
     # Allocate space for h (m0 rows * input columns)
     lw t0, 0(sp)   # m0 rows
     lw t1, 20(sp)  # input columns
@@ -124,16 +124,15 @@ compute:
     # Write output matrix o
     lw a0, 16(s1)   # argv[4]
     mv a1, s7       # o start pointer
-    lw a2, 8(sp)    
-    lw a3, 20(sp)   
+    lw a2, 8(sp)
+    lw a3, 20(sp)
     jal ra, write_matrix
 
     # Compute and return argmax(o)
     mv a0, s7   # o start pointer
     lw t0, 8(sp)
     lw t1, 20(sp)
-    mul t0, t0, t1
-    slli a1, t0, 2
+    mul a1, t0, t1
     jal ra, argmax
     mv s8, a0
 
@@ -145,7 +144,7 @@ print_argmax:
     beq s2, t0, free_space  # skip to end when slient mode.
 
     # Print out argmax(o).
-    mv a0, s8   
+    mv a0, s8
     jal print_int
 
     # Print out newline character.
@@ -155,7 +154,7 @@ print_argmax:
 # Free any data you allocated with malloc.
 free_space:
     # Free m0.
-    mv a0, s3   
+    mv a0, s3
     jal ra, free
 
     # Free m1.
@@ -174,6 +173,23 @@ free_space:
     mv a0, s7
     jal ra, free
 
+    mv t0, s8
+
+    # Epilogue
+    addi sp, sp, 24
+    lw ra, 0(sp)
+    lw s0, 4(sp)
+    lw s1, 8(sp)
+    lw s2, 12(sp)
+    lw s3, 16(sp)
+    lw s4, 20(sp)
+    lw s5, 24(sp)
+    lw s6, 28(sp)
+    lw s7, 32(sp)
+    lw s8, 36(sp)
+    addi sp, sp, 40
+
+    mv a0, t0   # 返回值 = classification
     jr ra
 
 
@@ -200,6 +216,6 @@ cleanup_and_exit:
     lw s6, 28(sp)
     lw s7, 32(sp)
     lw s8, 36(sp)
-    addi, sp, sp, 40
-    
+    addi sp, sp, 40
+
     j exit
